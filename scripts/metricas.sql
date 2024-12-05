@@ -16,7 +16,9 @@ AND ft.EMPRESA = 'GLO';
 -- Destinos mais procurados no mês
 
 
-SELECT da.municipio, SUM(ft.ASSENTOS) as total_passageiros
+SELECT 
+	da.municipio, 
+	SUM(ft.ASSENTOS) as total_passageiros
 from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
 INNER JOIN main.dim_aeroporto da on da.oaci = ft.DESTINO
 WHERE ft.ANO = 2023
@@ -27,7 +29,23 @@ order by 2 desc
 LIMIT  10;
 
 
-SELECT da.UF, SUM(ft.ASSENTOS) as total_passageiros
+SELECT
+	da.municipio, 
+	SUM(ft.ASSENTOS) as total_passageiros
+from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
+INNER JOIN main.dim_aeroporto da on da.oaci = ft.DESTINO
+WHERE ft.ANO = 2023
+AND ft.MES = 2
+AND ft.EMPRESA = 'AZU'
+AND da.UF = 'SP'
+GROUP BY da.municipio
+order by 2 desc;
+
+
+
+SELECT 
+	da.UF, 
+	SUM(ft.ASSENTOS) as total_passageiros
 from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
 INNER JOIN main.dim_aeroporto da on da.oaci = ft.DESTINO
 WHERE ft.ANO = 2023
@@ -53,7 +71,8 @@ order by 2 desc
 LIMIT  10;
 
 
-SELECT ft.ANO , 
+SELECT 
+	ft.ANO , 
 	ft.MES  , 
 	SUM(ft.ASSENTOS) as total_passageiros
 from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
@@ -66,7 +85,8 @@ GROUP BY ft.ANO , ft.MES
 order by 2 ASC ;
 
 
-SELECT ft.ANO , 
+SELECT 
+	ft.ANO , 
 	ft.MES, 
 	SUM(ft.ASSENTOS) as total_passageiros
 from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
@@ -107,14 +127,16 @@ ORDER BY MES ASC;
 
 ---- RECEITA por rota 
 
-SELECT da_origem.oaci || '-' || da_destino.oaci  , ROUND(SUM(ft.TARIFA * FT.ASSENTOS), 2) as total_passageiros
+SELECT 
+	da_origem.MUNICIPIO || '-' || da_destino.MUNICIPIO  , 
+	ROUND(SUM(ft.TARIFA * FT.ASSENTOS), 2) as total_passageiros
 from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
 INNER JOIN main.dim_aeroporto da_destino on da_destino.oaci = ft.DESTINO
 INNER JOIN main.dim_aeroporto da_origem on da_origem.oaci = ft.ORIGEM
 WHERE ft.ANO = 2023
 AND ft.MES = 2
 AND ft.EMPRESA = 'GLO'
-GROUP BY da_origem.oaci || '-' || da_destino.oaci
+GROUP BY da_origem.MUNICIPIO || '-' || da_destino.MUNICIPIO 
 order by 2 desc
 LIMIT  10;
 
@@ -199,7 +221,7 @@ Exemplo: GRU-JFK representa 20% das vendas totais do aeroporto de GRU.
 
 SELECT   
 	
-    da_origem.oaci || '-' || da_destino.oaci ,
+    da_origem.MUNICIPIO || '-' || da_destino.MUNICIPIO ,
     ROUND(SUM(ft.TARIFA * FT.ASSENTOS), 2) as total_passageiros,
     ROUND(SUM(SUM(ft.TARIFA * FT.ASSENTOS)) OVER (), 2) AS total_mes
 from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
@@ -209,7 +231,7 @@ WHERE ft.ANO = 2023
 AND ft.MES = 1
 AND ft.EMPRESA = 'GLO'
 
-GROUP BY da_origem.oaci || '-' || da_destino.oaci
+GROUP BY da_origem.MUNICIPIO || '-' || da_destino.MUNICIPIO
 order by 2 DESC 
 ;
 
