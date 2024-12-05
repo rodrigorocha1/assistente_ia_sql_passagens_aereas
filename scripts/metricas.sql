@@ -8,7 +8,7 @@ where e.ICAO  = 'ABJ';
 SELECT *
 from main.ft_venda_passagem fvp ;
 
-SELECT *
+SELECT DISTINCT EMPRESA
 from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
 WHERE ft.ANO = 2023
 AND ft.MES = 1
@@ -78,7 +78,7 @@ SELECT
 from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
 INNER JOIN main.dim_aeroporto da_destino on da_destino.oaci = ft.DESTINO
 INNER JOIN main.dim_aeroporto da_origem on da_origem.oaci = ft.ORIGEM
-WHERE  ft.EMPRESA = 'GLO'
+WHERE  ft.EMPRESA = 'TAM'
 AND ANO = 2023
 AND da_origem.oaci || '-' || da_destino.oaci = 'SBRJ-SBSP'
 GROUP BY ft.ANO , ft.MES 
