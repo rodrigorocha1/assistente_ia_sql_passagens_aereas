@@ -3,3 +3,4 @@ banco
 docs/dim_aeroporto_202411282124_depara_video.csv
 .env
 docs
+__pycache__
