@@ -13,7 +13,7 @@ class ConexaoBancoDuckdb:
             'dados_passagens.duckdb'
         )
         self.__DATABASE_URL = 'duckdb:///' + self.__CAMINHO_BANCO
-        self.__engine = create_engine(
+        self.__conexao = create_engine(
             self.__DATABASE_URL,
             echo=False,
             isolation_level='AUTOCOMMIT',
@@ -23,8 +23,11 @@ class ConexaoBancoDuckdb:
         self.__session_local = sessionmaker(
             autoflush=False,
             autocommit=False,
-            bind=self.__engine
+            bind=self.__conexao
         )
+
+    def obter_conexao(self):
+        return self.__conexao
 
     def obter_sessao(self) -> Session:
         session = self.__session_local()

@@ -160,7 +160,7 @@ AND da_origem.oaci || '-' || da_destino.oaci = 'SBRJ-SBSP'
 GROUP BY ft.ANO, FT.MES
 order by 2 ASC;
 
---- Faturamento por mês
+--- Faturamento por mês 3
 
 SELECT 
         ft.ANO,
@@ -180,7 +180,7 @@ SELECT
         ft.ANO, ft.MES 
      ORDER BY 1, 2 -- Até aqui tabs 
 
---- Faturamento acumulado Atual X período anterior
+--- Faturamento acumulado Atual X período anterior --4
 
 WITH faturamento_mensal AS (
     SELECT 
@@ -209,39 +209,9 @@ FROM
     faturamento_mensal
 ORDER BY 
     ANO ASC, MES ASC;
-
--- Participação de Mercado por Origem/Destino
-
-
-SELECT   
-	
-    da_origem.MUNICIPIO || '-' || da_destino.MUNICIPIO ,
-    ROUND(SUM(ft.TARIFA * FT.ASSENTOS), 2) as total_passageiros,
-    ROUND(SUM(SUM(ft.TARIFA * FT.ASSENTOS)) OVER (), 2) AS total_mes
-from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
-INNER JOIN main.dim_aeroporto da_destino on da_destino.oaci = ft.DESTINO
-INNER JOIN main.dim_aeroporto da_origem on da_origem.oaci = ft.ORIGEM
-WHERE ft.ANO = 2023
-AND ft.MES = 1
-AND ft.EMPRESA = 'GLO'
-
-GROUP BY da_origem.MUNICIPIO || '-' || da_destino.MUNICIPIO
-order by 2 DESC 
-;
-
-SELECT   
-    da_origem.MUNICIPIO || '-' || da_destino.MUNICIPIO AS rota,
-    ROUND(SUM(ft.TARIFA * FT.ASSENTOS), 2) AS FATURAMENTO,
-	ROUND(SUM(SUM(ft.TARIFA * FT.ASSENTOS)) OVER (), 2) AS total_mes,
-    ROUND((SUM(ft.TARIFA * FT.ASSENTOS)  * 100) / ROUND(SUM(SUM(ft.TARIFA * FT.ASSENTOS)) OVER (), 2), 3)  as porcentagem_participacao
-FROM read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
-INNER JOIN main.dim_aeroporto da_destino ON da_destino.oaci = ft.DESTINO
-INNER JOIN main.dim_aeroporto da_origem ON da_origem.oaci = ft.ORIGEM
-WHERE ft.ANO = 2023
-AND ft.MES = 2
-AND ft.EMPRESA = 'AZU'
-GROUP BY  da_origem.MUNICIPIO || '-' || da_destino.MUNICIPIO
-ORDER BY 4 DESC;
+   
+   
+   
 --- Receita por destino 
 
 SELECT   
@@ -266,6 +236,43 @@ AND ft.MES = 2
 AND ft.EMPRESA = 'AZU'
 GROUP BY  da_origem.MUNICIPIO
 ORDER BY 2 DESC;
+=============================================================================
+
+-- Participação de Mercado por Origem/Destino
+
+
+--- Geral 
+
+SELECT   
+	
+    da_origem.MUNICIPIO || '-' || da_destino.MUNICIPIO ,
+    ROUND(SUM(ft.TARIFA * FT.ASSENTOS), 2) as total_passageiros,
+    ROUND(SUM(SUM(ft.TARIFA * FT.ASSENTOS)) OVER (), 2) AS total_mes
+from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
+INNER JOIN main.dim_aeroporto da_destino on da_destino.oaci = ft.DESTINO
+INNER JOIN main.dim_aeroporto da_origem on da_origem.oaci = ft.ORIGEM
+WHERE ft.ANO = 2023
+AND ft.MES = 1
+AND ft.EMPRESA = 'GLO'
+
+GROUP BY da_origem.MUNICIPIO || '-' || da_destino.MUNICIPIO
+order by 2 DESC 
+;
+--- 
+SELECT   
+    da_origem.MUNICIPIO || '-' || da_destino.MUNICIPIO AS rota,
+    ROUND(SUM(ft.TARIFA * FT.ASSENTOS), 2) AS FATURAMENTO,
+	ROUND(SUM(SUM(ft.TARIFA * FT.ASSENTOS)) OVER (), 2) AS total_mes,
+    ROUND((SUM(ft.TARIFA * FT.ASSENTOS)  * 100) / ROUND(SUM(SUM(ft.TARIFA * FT.ASSENTOS)) OVER (), 2), 3)  as porcentagem_participacao
+FROM read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
+INNER JOIN main.dim_aeroporto da_destino ON da_destino.oaci = ft.DESTINO
+INNER JOIN main.dim_aeroporto da_origem ON da_origem.oaci = ft.ORIGEM
+WHERE ft.ANO = 2023
+AND ft.MES = 2
+AND ft.EMPRESA = 'AZU'
+GROUP BY  da_origem.MUNICIPIO || '-' || da_destino.MUNICIPIO
+ORDER BY 4 DESC;
+
 
 
 
