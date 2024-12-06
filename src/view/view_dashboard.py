@@ -28,6 +28,8 @@ class ViewDashboard:
                     'Variação de procura de destino em relação ao mês anterior',
                 )
 
+    def gerar_layout_receita(self):
+        with st.container(border=True):
             col5, col6, col7 = st.columns(3)
             with col5:
                 st.text('Receita por destino ')
@@ -48,6 +50,12 @@ class ViewDashboard:
             with col3:
                 st.text('Taxa de Crescimento de Assentos Vendidos')
 
+    def gerar_layout_participacao_mercado(self):
+        with st.container(border=True):
+            st.markdown('Participação de Mercado por Origem/Destino')
+
     def rodar_dashboard(self):
         self.gerar_layout_receita_origem()
+        self.gerar_layout_receita()
         self.gerar_layout_assentos()
+        self.gerar_layout_participacao_mercado()
