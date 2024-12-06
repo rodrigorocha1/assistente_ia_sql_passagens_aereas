@@ -9,25 +9,45 @@ class ViewDashboard:
     )
 
     def gerar_layout_receita_origem(self):
-        tab1, tab2, tab3, tab4 = st.tabs(
-            [
-                'Geral',
-                'Por Estado',
-                'Total de passageiros por estado',
-                'Variação de procura de destino em relação ao mês anterior'
-            ]
-        )
-        with tab1:
-            st.subheader('Geral')
-        with tab2:
-            st.subheader('Por Estado')
-        with tab3:
-            st.subheader('Total de passageiros por estado')
-        with tab4:
-            st.subheader(
-                'Variação de procura de destino em relação ao mês anterior',
+        with st.container(border=True):
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.text(
+                    'Geral'
+                )
+            with col2:
+                st.text(
+                    'Por Estado'
+                )
+            with col3:
+                st.text(
+                    'Total de passageiros por estado'
+                )
+            with col4:
+                st.text(
+                    'Variação de procura de destino em relação ao mês anterior',
+                )
 
-            )
+            col5, col6, col7 = st.columns(3)
+            with col5:
+                st.text('Receita por destino ')
+            with col6:
+                st.text('Receita por origem')
+            with col7:
+                st.text('Faturamento Acumulado')
+
+    def gerar_layout_assentos(self):
+        with st.container(border=True):
+            st.markdown('Total de Assentos Vendidos por rota')
+            col1, col2, col3 = st.columns(3)
+
+            with col1:
+                st.text('Rota Geral')
+            with col2:
+                st.text('Período por rota')
+            with col3:
+                st.text('Taxa de Crescimento de Assentos Vendidos')
 
     def rodar_dashboard(self):
         self.gerar_layout_receita_origem()
+        self.gerar_layout_assentos()
