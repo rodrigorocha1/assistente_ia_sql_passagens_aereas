@@ -209,37 +209,37 @@ class ViewDashboard:
                     key=12
                 )
 
-                # dataframe = self.__controler.obter_destinos_mais_procurados_mes_uf(
+                dataframe = self.__controler.obter_estados_destinos_mais_procurados_mes(
 
-                #     ano=ano,
-                #     mes=int(mes.split('-')[0]),
-                #     empresa=empresa.split('-')[0]
-                # )
+                    ano=ano,
+                    mes=int(mes.split('-')[0]),
+                    sigla_empresa=empresa.split('-')[0]
+                )
 
-                # tab_tabela, tab_grafico = st.tabs(['Tabela', 'Grafico'])
+                tab_tabela, tab_grafico = st.tabs(['Tabela', 'Grafico'])
 
-                # with tab_grafico:
-                #     self.__grafico.gerar_grafico_destinos_procurados(
-                #         dataframe=dataframe,
-                #         coluna_x='total_passageiros',
-                #         coluna_y='estado',
-                #         texto='total_passageiros',
-                #         texto_template=(
-                #             "<b>Total Passageiros:</b> %{x}<br>"
-                #             "<b>Estado:</b> %{y}<br>"
-                #             "<extra></extra>"
-                #         ),
-                #         key=9,
+                with tab_grafico:
+                    self.__grafico.gerar_grafico_destinos_procurados(
+                        dataframe=dataframe,
+                        coluna_x='total_passageiros',
+                        coluna_y='estado',
+                        texto='total_passageiros',
+                        texto_template=(
+                            "<b>Total Passageiros:</b> %{x}<br>"
+                            "<b>Estado:</b> %{y}<br>"
+                            "<extra></extra>"
+                        ),
+                        key=13,
 
-                #         legenda_x='Estado',
-                #         legenda_y='Total de passageiros'
-                #     )
-                # with tab_tabela:
-                #     trofeus = ["🥇", "🥈", "🥉"]
-                #     for i in range(min(3, len(dataframe))):
-                #         dataframe.iloc[i,
-                #                        1] = f"{trofeus[i]} {dataframe.iloc[i, 1]}"
-                #     st.table(dataframe)
+                        legenda_x='Estado',
+                        legenda_y='Total de passageiros'
+                    )
+                with tab_tabela:
+                    trofeus = ["🥇", "🥈", "🥉"]
+                    for i in range(min(3, len(dataframe))):
+                        dataframe.iloc[i,
+                                       1] = f"{trofeus[i]} {dataframe.iloc[i, 1]}"
+                    st.table(dataframe)
 
             with col4:
                 st.text(

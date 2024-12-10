@@ -96,10 +96,46 @@ class Medida:
             AND ft.EMPRESA = ?
             GROUP BY da.UF
             order by 2 desc
+            LIMIT 10
         """
 
         tipos = {
             'estado': 'string',
+            'total_passageiros': 'int64'
+        }
+        parametros = (ano, mes, sigla_empresa)
+        try:
+            dataframe = pd.read_sql_query(
+                sql=sql,
+                con=self.__db.obter_conexao(),
+                params=parametros,
+                dtype=tipos
+            )
+
+        finally:
+            self.__db.obter_sessao().close()
+
+        return dataframe
+
+    def obter_estados_mais_procurados(self, ano: int, mes: int, sigla_empresa: str) -> pd.DataFrame:
+
+        sql = """
+                SELECT 
+                da.UF as UF, 
+                SUM(ft.ASSENTOS) as total_passageiros
+            from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
+            INNER JOIN main.dim_aeroporto da on da.oaci = ft.DESTINO
+            WHERE ft.ANO = ?
+            AND ft.MES = ?
+            AND ft.EMPRESA = ?
+            GROUP BY da.UF
+            order by 2 desc 
+            LIMIT 10
+
+        """
+
+        tipos = {
+            'UF': 'string',
             'total_passageiros': 'int64'
         }
         parametros = (ano, mes, sigla_empresa)
