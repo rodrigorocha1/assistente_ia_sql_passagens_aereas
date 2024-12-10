@@ -1,3 +1,4 @@
+from typing import Tuple
 import plotly.express as px
 import pandas as pd
 import streamlit as st
@@ -15,28 +16,35 @@ class ViewGrafico:
             'Noite': 'rgb(33, 150, 243)'   # Azul
         }
 
-    def gerar_grafico_destinos_procurados(self, dataframe: pd.DataFrame, chave: int):
+    def gerar_grafico_destinos_procurados(
+            self,
+            dataframe: pd.DataFrame,
+
+            coluna_x: str,
+            coluna_y: str,
+            texto: str,
+            texto_template: Tuple,
+            legenda_x: str,
+            legenda_y: str,
+            key: int
+    ):
         fig = px.bar(
             dataframe,
-            y='municipio',
-            x='total_passageiros',
+            y=coluna_y,
+            x=coluna_x,
+            text=texto,
             category_orders={
-                "municipio": dataframe['municipio'].tolist()
-            },
-            text='total_passageiros'
+                coluna_y: dataframe[coluna_y].tolist()
+            }
         )
         fig.update_traces(
             textposition='outside',
-            hovertemplate=(
-                "<b>Total Passageiros:</b> %{x}<br>"
-                "<b>Município:</b> %{y}<br>"
-                "<extra></extra>"
-            ),
+            hovertemplate=texto_template,
             width=0.6
         )
         fig.update_layout(
-            xaxis_title='Total de passageiros',
-            yaxis_title='Município',
+            xaxis_title=legenda_x,
+            yaxis_title=legenda_y,
             bargap=0.6,
             width=self.__largura,
             height=self.__altura,
@@ -45,4 +53,4 @@ class ViewGrafico:
                 font_family="Arial"
             )
         )
-        st.plotly_chart(fig, key=chave)
+        st.plotly_chart(fig, key=key)

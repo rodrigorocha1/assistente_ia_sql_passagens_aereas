@@ -60,7 +60,19 @@ class ViewDashboard:
                 with tab_grafico:
                     self.__grafico.gerar_grafico_destinos_procurados(
                         dataframe=dataframe,
-                        chave=8
+                        coluna_x='municipio',
+                        coluna_y='total_passageiros',
+                        texto='total_passageiros',
+                        texto_template=(
+                            "<b>Total Passageiros:</b> %{x}<br>"
+                            "<b>Município:</b> %{y}<br>"
+                            "<extra></extra>"
+                        ),
+                        key=4,
+
+                        legenda_x='Município',
+                        legenda_y='Total de passageiros'
+
                     )
                 with tab_tabela:
                     trofeus = ["🥇", "🥈", "🥉"]
@@ -77,14 +89,14 @@ class ViewDashboard:
                     'Escolha o ano',
                     (2023, 2024),
                     horizontal=True,
-                    key=4
+                    key=5
                 )
                 mes = st.selectbox(
                     'Escolha o mês',
                     (
                         '1-Janeiro', '2-Fevereiro', '3-Março', '4-Abril', '5-Maio', '6-Junho', '7-Julho', '8-Agosto', '9-Setembro', '10-Outubro', '11-Novembro', '12-Dezembro'
                     ),
-                    key=5
+                    key=6
                 )
 
                 empresa = st.selectbox(
@@ -142,17 +154,17 @@ class ViewDashboard:
 
                 tab_tabela, tab_grafico = st.tabs(['Tabela', 'Grafico'])
 
-                with tab_grafico:
-                    self.__grafico.gerar_grafico_destinos_procurados(
-                        dataframe=dataframe,
-                        chave=9
-                    )
-                with tab_tabela:
-                    trofeus = ["🥇", "🥈", "🥉"]
-                    for i in range(min(3, len(dataframe))):
-                        dataframe.iloc[i,
-                                       1] = f"{trofeus[i]} {dataframe.iloc[i, 1]}"
-                    st.table(dataframe)
+                # with tab_grafico:
+                #     self.__grafico.gerar_grafico_destinos_procurados(
+                #         dataframe=dataframe,
+                #         chave=9
+                #     )
+                # with tab_tabela:
+                #     trofeus = ["🥇", "🥈", "🥉"]
+                #     for i in range(min(3, len(dataframe))):
+                #         dataframe.iloc[i,
+                #                        1] = f"{trofeus[i]} {dataframe.iloc[i, 1]}"
+                #     st.table(dataframe)
 
             with col3:
                 st.text(
