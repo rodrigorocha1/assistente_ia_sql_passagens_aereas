@@ -7,7 +7,12 @@ class Controller:
     def __init__(self):
         self.__medida = Medida()
 
-    def obter_destinos_mais_procurados_mes(self, ano: int, mes: int, empresa: str) -> pd.DataFrame:
+    def obter_destinos_mais_procurados_mes(
+            self,
+            ano: int,
+            mes: int,
+            empresa: str
+    ) -> pd.DataFrame:
         dataframe = self.__medida.obter_destinos_mais_procurados(
             ano=ano,
             mes=mes,
@@ -15,7 +20,12 @@ class Controller:
         )
         return dataframe
 
-    def obter_destinos_mais_procurados_mes_uf(self, estado: str,  ano: int, mes: int, empresa: str) -> pd.DataFrame:
-        dataframe = self.__medida.obter_destinos_mais_procurados_uf(
-            estado=estado, ano=ano, mes=mes, sigla_empresa=empresa)
+    def obter_destinos_mais_procurados_mes_por_uf(
+            self,
+            ano: int,
+            mes: int,
+            empresa: str
+    ) -> pd.DataFrame:
+        dataframe = self.__medida.obter_destinos_mais_procurados_por_estado(
+            ano=ano, mes=mes, sigla_empresa=empresa)
         return dataframe

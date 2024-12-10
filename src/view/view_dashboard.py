@@ -109,7 +109,7 @@ class ViewDashboard:
                         'PTB-PASSAREDO TRANSPORTES AÉREOS S.A.',
                         'TAM-TAM LINHAS AÉREAS S.A.'
                     ),
-                    key=6
+                    key=7
                 )
                 estado = st.selectbox(
                     'Selecione o estado',
@@ -142,11 +142,11 @@ class ViewDashboard:
                         'SE-Sergipe',
                         'TO-Tocantins'
                     ),
-                    key=7
+                    key=8
                 )
 
-                dataframe = self.__controler.obter_destinos_mais_procurados_mes_uf(
-                    estado=estado.split('-')[0],
+                dataframe = self.__controler.obter_destinos_mais_procurados_mes_por_uf(
+
                     ano=ano,
                     mes=int(mes.split('-')[0]),
                     empresa=empresa.split('-')[0],
@@ -154,10 +154,85 @@ class ViewDashboard:
 
                 tab_tabela, tab_grafico = st.tabs(['Tabela', 'Grafico'])
 
+                with tab_grafico:
+                    self.__grafico.gerar_grafico_destinos_procurados(
+                        dataframe=dataframe,
+                        coluna_x='total_passageiros',
+                        coluna_y='estado',
+                        texto='total_passageiros',
+                        texto_template=(
+                            "<b>Total Passageiros:</b> %{x}<br>"
+                            "<b>Estado:</b> %{y}<br>"
+                            "<extra></extra>"
+                        ),
+                        key=9,
+
+                        legenda_x='Estado',
+                        legenda_y='Total de passageiros'
+                    )
+                with tab_tabela:
+                    trofeus = ["🥇", "🥈", "🥉"]
+                    for i in range(min(3, len(dataframe))):
+                        dataframe.iloc[i,
+                                       1] = f"{trofeus[i]} {dataframe.iloc[i, 1]}"
+                    st.table(dataframe)
+
+            with col3:
+                st.text(
+                    'Destinos mais procurados no mês-Total de passageiros por estado'
+                )
+
+                ano = st.radio(
+                    'Escolha o ano',
+                    (2023, 2024),
+                    horizontal=True,
+                    key=10
+                )
+                mes = st.selectbox(
+                    'Escolha o mês',
+                    (
+                        '1-Janeiro', '2-Fevereiro', '3-Março', '4-Abril', '5-Maio', '6-Junho', '7-Julho', '8-Agosto', '9-Setembro', '10-Outubro', '11-Novembro', '12-Dezembro'
+                    ),
+                    key=11
+                )
+
+                empresa = st.selectbox(
+                    'Selecione a empresa',
+                    (
+                        'CQB-APUÍ TÁXI AÉREO S/A',
+                        'ABJ-ATA AEROTÁXI ABAETÉ LTDA.',
+                        'AZU-AZUL LINHAS AÉREAS BRASILEIRAS S/A',
+                        'GLO-GOL LINHAS AÉREAS S.A. (EX - VRG LINHAS AÉREAS S.A.)',
+                        'PTB-PASSAREDO TRANSPORTES AÉREOS S.A.',
+                        'TAM-TAM LINHAS AÉREAS S.A.'
+                    ),
+                    key=12
+                )
+
+                # dataframe = self.__controler.obter_destinos_mais_procurados_mes_uf(
+
+                #     ano=ano,
+                #     mes=int(mes.split('-')[0]),
+                #     empresa=empresa.split('-')[0]
+                # )
+
+                # tab_tabela, tab_grafico = st.tabs(['Tabela', 'Grafico'])
+
                 # with tab_grafico:
                 #     self.__grafico.gerar_grafico_destinos_procurados(
                 #         dataframe=dataframe,
-                #         chave=9
+                #         coluna_x='total_passageiros',
+                #         coluna_y='estado',
+                #         texto='total_passageiros',
+                #         texto_template=(
+                #             "<b>Total Passageiros:</b> %{x}<br>"
+                #             "<b>Estado:</b> %{y}<br>"
+                #             "<extra></extra>"
+                #         ),
+                #         key=9,
+
+                #         legenda_x='Estado',
+                #         legenda_y='Total de passageiros'
                 #     )
                 # with tab_tabela:
                 #     trofeus = ["🥇", "🥈", "🥉"]
@@ -166,10 +241,6 @@ class ViewDashboard:
                 #                        1] = f"{trofeus[i]} {dataframe.iloc[i, 1]}"
                 #     st.table(dataframe)
 
-            with col3:
-                st.text(
-                    'Destinos mais procurados no mês-Total de passageiros por estado'
-                )
             with col4:
                 st.text(
                     'Destinos mais procurados no mês-Variação de procura de destino em relação ao mês anterior',

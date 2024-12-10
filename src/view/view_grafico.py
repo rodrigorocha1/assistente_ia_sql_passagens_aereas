@@ -19,7 +19,6 @@ class ViewGrafico:
     def gerar_grafico_destinos_procurados(
             self,
             dataframe: pd.DataFrame,
-
             coluna_x: str,
             coluna_y: str,
             texto: str,
