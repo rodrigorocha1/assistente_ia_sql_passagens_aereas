@@ -1,4 +1,6 @@
 import streamlit as st
+from src.view.view_grafico import ViewGrafico
+from src.controller.controller import Controller
 
 
 class ViewDashboard:
@@ -8,24 +10,55 @@ class ViewDashboard:
 
     )
 
+    def __init__(self):
+        self.__grafico = ViewGrafico()
+        self.__controler = Controller()
+
     def gerar_layout_receita_origem(self):
         with st.container(border=True):
             col1, col2, col3, col4 = st.columns(4)
             with col1:
+                ano = st.radio(
+                    'Escolha o ano',
+                    (2023, 2024),
+                    horizontal=True
+                )
+                mes = st.selectbox(
+                    'Escolha o mês',
+                    (
+                        '1-Janeiro', '2-Fevereiro', '3-Março', '4-Abril', '5-Maio', '6-Junho', '7-Julho', '8-Agosto', '9-Setembro', '10-Outubro', '11-Novembro', '12-Dezembro'
+                    )
+                )
                 st.text(
-                    'Geral'
+                    'Destinos mais procurados no mês-Geral'
+                )
+                empresa = st.selectbox(
+                    'Selecione a empresa',
+                    (
+                        'CQB-APUÍ TÁXI AÉREO S/A',
+                        'ABJ-ATA AEROTÁXI ABAETÉ LTDA.',
+                        'AZU-AZUL LINHAS AÉREAS BRASILEIRAS S/A',
+                        'GLO-GOL LINHAS AÉREAS S.A. (EX - VRG LINHAS AÉREAS S.A.)',
+                        'PTB-PASSAREDO TRANSPORTES AÉREOS S.A.',
+                        'TAM-TAM LINHAS AÉREAS S.A.'
+                    )
+                )
+                dataframe = self.__controler.obter_destinos_mais_procurados_mes(
+                    ano=ano,
+                    mes=int(mes.split('-')[0]),
+                    empresa=empresa.split('-')[0]
                 )
             with col2:
                 st.text(
-                    'Por Estado'
+                    'Destinos mais procurados no mês-Por Estado'
                 )
             with col3:
                 st.text(
-                    'Total de passageiros por estado'
+                    'Destinos mais procurados no mês-Total de passageiros por estado'
                 )
             with col4:
                 st.text(
-                    'Variação de procura de destino em relação ao mês anterior',
+                    'Destinos mais procurados no mês-Variação de procura de destino em relação ao mês anterior',
                 )
 
     def gerar_layout_receita(self):

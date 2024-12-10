@@ -7,18 +7,30 @@ class Medida:
 
     def __init__(self):
         self.__db = ConexaoBancoDuckdb()
-        self.__db.iniciar_banco()
+        self.__conexao = self.__db.obter_conexao()
+        self.__Sessao = self.__db.obter_sessao()
+        Base.metadata.create_all(self.__conexao)
 
-    def obter_destinos_mais_procurados(self, ano: int, mes: int, sigla_empresa: str):
+    def obter_destinos_mais_procurados(self, ano: int, mes: int, sigla_empresa: str) -> pd.DataFrame:
+        """_summary_
+
+        Args:
+            ano (int): ano  
+            mes (int): mês 
+            sigla_empresa (str): Sigla da empresa áerea
+
+        Returns:
+            pd.DataFrame: Dataframe com o resultado
+        """
         sql = """
             SELECT 
                 da.municipio as municipio, 
                 SUM(ft.ASSENTOS) as total_passageiros
             from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
             INNER JOIN main.dim_aeroporto da on da.oaci = ft.DESTINO
-            WHERE ft.ANO = %s
-            AND ft.MES = %s
-            AND ft.EMPRESA = %s
+            WHERE ft.ANO = ?
+            AND ft.MES = ?
+            AND ft.EMPRESA = ?
             GROUP BY da.municipio
             order by 2 desc
             LIMIT  10

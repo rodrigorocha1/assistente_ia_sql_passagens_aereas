@@ -15,12 +15,10 @@ class ConexaoBancoDuckdb:
         self.__DATABASE_URL = 'duckdb:///' + self.__CAMINHO_BANCO
         self.__conexao = create_engine(
             self.__DATABASE_URL,
-            echo=False,
-            isolation_level='AUTOCOMMIT',
-            connect_args={'timeout': 30}
+            echo=False
         )
 
-        self.__session_local = sessionmaker(
+        self.__Sessao = sessionmaker(
             autoflush=False,
             autocommit=False,
             bind=self.__conexao
@@ -29,13 +27,5 @@ class ConexaoBancoDuckdb:
     def obter_conexao(self):
         return self.__conexao
 
-    def obter_sessao(self) -> Session:
-        session = self.__session_local()
-        try:
-            return session
-        except Exception:
-            session.rollback()
-            raise
-
-    def iniciar_banco(self):
-        Base.metadata.create_all(bind=self.__engine)
+    def obter_sessao(self):
+        return self.__Sessao()

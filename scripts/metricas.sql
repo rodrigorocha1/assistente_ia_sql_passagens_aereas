@@ -3,10 +3,26 @@ from dim_aeroporto ;
 
 SELECT *
 from main.dim_empresas e
-where e.ICAO  = 'ABJ';
+where e.ICAO  IN (
+	'GLO',
+	'AZU',
+	'TAM',
+	'PTB',
+	'ABJ',
+	'CQB'
+);
 
 SELECT *
 from main.ft_venda_passagem fvp ;
+
+/*
+	CQB-APUÍ TÁXI AÉREO S/A
+	ABJ-ATA AEROTÁXI ABAETÉ LTDA.
+	AZU-AZUL LINHAS AÉREAS BRASILEIRAS S/A
+	GLO-GOL LINHAS AÉREAS S.A. (EX- VRG LINHAS AÉREAS S.A.)
+	PTB-PASSAREDO TRANSPORTES AÉREOS S.A.
+	TAM-TAM LINHAS AÉREAS S.A.
+ */
 
 SELECT DISTINCT EMPRESA
 from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
