@@ -97,3 +97,45 @@ class Medida:
             self.__db.obter_sessao().close()
 
         return dataframe
+
+    def obter_destinos_mais_procurados_por_estado(self, ano: int, mes: int, sigla_empresa: str) -> pd.DataFrame:
+        """_summary_
+
+        Args:
+            ano (int): _description_
+            mes (int): _description_
+            sigla_empresa (str): _description_
+
+        Returns:
+            pd.DataFrame: _description_
+        """
+        sql = """
+            SELECT 
+                da.UF AS estado, 
+                SUM(ft.ASSENTOS) as total_passageiros
+            from read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
+            INNER JOIN main.dim_aeroporto da on da.oaci = ft.DESTINO
+            WHERE ft.ANO = ?
+            AND ft.MES = ?
+            AND ft.EMPRESA = ?
+            GROUP BY da.UF
+            order by 2 desc
+        """
+
+        tipos = {
+            'municipio': 'string',
+            'total_passageiros': 'int64'
+        }
+        parametros = (ano, mes, sigla_empresa)
+        try:
+            dataframe = pd.read_sql_query(
+                sql=sql,
+                con=self.__db.obter_conexao(),
+                params=parametros,
+                dtype=tipos
+            )
+
+        finally:
+            self.__db.obter_sessao().close()
+
+        return dataframe
