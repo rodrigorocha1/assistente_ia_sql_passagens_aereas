@@ -53,8 +53,17 @@ class ViewDashboard:
                     empresa=empresa.split('-')[0]
                 )
 
-                self.__grafico.gerar_grafico_destinos_procurados_geral(
-                    dataframe=dataframe)
+                tab_tabela, tab_grafico = st.tabs(['Tabela', 'Grafico'])
+                with tab_tabela:
+                    trofeus = ["🥇", "🥈", "🥉"]
+                    for i in range(min(3, len(dataframe))):
+                        dataframe.iloc[i,
+                                       1] = f"{trofeus[i]} {dataframe.iloc[i, 1]}"
+                    st.table(dataframe)
+                with tab_grafico:
+                    self.__grafico.gerar_grafico_destinos_procurados_geral(
+                        dataframe=dataframe
+                    )
             with col2:
                 st.text(
                     'Destinos mais procurados no mês-Por Estado'
