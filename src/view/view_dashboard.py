@@ -18,6 +18,12 @@ class ViewDashboard:
         with st.container(border=True):
             col1, col2, col3, col4 = st.columns(4)
             with col1:
+                st.markdown(
+                    """
+                    <h4 style='font-size:16px; margin:0; text-align: center;'>Destinos mais procurados no mês</h4>
+                    """,
+                    unsafe_allow_html=True,
+                )
                 ano = st.radio(
                     'Escolha o ano',
                     (2023, 2024),
@@ -29,9 +35,7 @@ class ViewDashboard:
                         '1-Janeiro', '2-Fevereiro', '3-Março', '4-Abril', '5-Maio', '6-Junho', '7-Julho', '8-Agosto', '9-Setembro', '10-Outubro', '11-Novembro', '12-Dezembro'
                     )
                 )
-                st.text(
-                    'Destinos mais procurados no mês-Geral'
-                )
+
                 empresa = st.selectbox(
                     'Selecione a empresa',
                     (
@@ -48,6 +52,9 @@ class ViewDashboard:
                     mes=int(mes.split('-')[0]),
                     empresa=empresa.split('-')[0]
                 )
+
+                self.__grafico.gerar_grafico_destinos_procurados_geral(
+                    dataframe=dataframe)
             with col2:
                 st.text(
                     'Destinos mais procurados no mês-Por Estado'
