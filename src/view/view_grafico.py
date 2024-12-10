@@ -15,7 +15,7 @@ class ViewGrafico:
             'Noite': 'rgb(33, 150, 243)'   # Azul
         }
 
-    def gerar_grafico_destinos_procurados_geral(self, dataframe: pd.DataFrame):
+    def gerar_grafico_destinos_procurados(self, dataframe: pd.DataFrame, chave: int):
         fig = px.bar(
             dataframe,
             y='municipio',
@@ -45,4 +45,4 @@ class ViewGrafico:
                 font_family="Arial"
             )
         )
-        st.plotly_chart(fig)
+        st.plotly_chart(fig, key=chave)

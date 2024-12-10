@@ -14,3 +14,8 @@ class Controller:
             sigla_empresa=empresa
         )
         return dataframe
+
+    def obter_destinos_mais_procurados_mes_uf(self, estado: str,  ano: int, mes: int, empresa: str) -> pd.DataFrame:
+        dataframe = self.__medida.obter_destinos_mais_procurados_uf(
+            estado=estado, ano=ano, mes=mes, sigla_empresa=empresa)
+        return dataframe

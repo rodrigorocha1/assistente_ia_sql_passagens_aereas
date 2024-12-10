@@ -27,13 +27,15 @@ class ViewDashboard:
                 ano = st.radio(
                     'Escolha o ano',
                     (2023, 2024),
-                    horizontal=True
+                    horizontal=True,
+                    key=1
                 )
                 mes = st.selectbox(
                     'Escolha o mês',
                     (
                         '1-Janeiro', '2-Fevereiro', '3-Março', '4-Abril', '5-Maio', '6-Junho', '7-Julho', '8-Agosto', '9-Setembro', '10-Outubro', '11-Novembro', '12-Dezembro'
-                    )
+                    ),
+                    key=2
                 )
 
                 empresa = st.selectbox(
@@ -45,7 +47,8 @@ class ViewDashboard:
                         'GLO-GOL LINHAS AÉREAS S.A. (EX - VRG LINHAS AÉREAS S.A.)',
                         'PTB-PASSAREDO TRANSPORTES AÉREOS S.A.',
                         'TAM-TAM LINHAS AÉREAS S.A.'
-                    )
+                    ),
+                    key=3
                 )
                 dataframe = self.__controler.obter_destinos_mais_procurados_mes(
                     ano=ano,
@@ -55,8 +58,9 @@ class ViewDashboard:
 
                 tab_tabela, tab_grafico = st.tabs(['Tabela', 'Grafico'])
                 with tab_grafico:
-                    self.__grafico.gerar_grafico_destinos_procurados_geral(
-                        dataframe=dataframe
+                    self.__grafico.gerar_grafico_destinos_procurados(
+                        dataframe=dataframe,
+                        chave=8
                     )
                 with tab_tabela:
                     trofeus = ["🥇", "🥈", "🥉"]
@@ -69,6 +73,87 @@ class ViewDashboard:
                 st.text(
                     'Destinos mais procurados no mês-Por Estado'
                 )
+                ano = st.radio(
+                    'Escolha o ano',
+                    (2023, 2024),
+                    horizontal=True,
+                    key=4
+                )
+                mes = st.selectbox(
+                    'Escolha o mês',
+                    (
+                        '1-Janeiro', '2-Fevereiro', '3-Março', '4-Abril', '5-Maio', '6-Junho', '7-Julho', '8-Agosto', '9-Setembro', '10-Outubro', '11-Novembro', '12-Dezembro'
+                    ),
+                    key=5
+                )
+
+                empresa = st.selectbox(
+                    'Selecione a empresa',
+                    (
+                        'CQB-APUÍ TÁXI AÉREO S/A',
+                        'ABJ-ATA AEROTÁXI ABAETÉ LTDA.',
+                        'AZU-AZUL LINHAS AÉREAS BRASILEIRAS S/A',
+                        'GLO-GOL LINHAS AÉREAS S.A. (EX - VRG LINHAS AÉREAS S.A.)',
+                        'PTB-PASSAREDO TRANSPORTES AÉREOS S.A.',
+                        'TAM-TAM LINHAS AÉREAS S.A.'
+                    ),
+                    key=6
+                )
+                estado = st.selectbox(
+                    'Selecione o estado',
+                    (
+                        'AC-Acre',
+                        'AL-Alagoas',
+                        'AP-Amapá',
+                        'AM-Amazonas',
+                        'BA-Bahia',
+                        'CE-Ceará',
+                        'DF-Distrito Federal',
+                        'ES-Espírito Santo',
+                        'GO-Goiás',
+                        'MA-Maranhão',
+                        'MT-Mato Grosso',
+                        'MS-Mato Grosso do Sul',
+                        'MG-Minas Gerais',
+                        'PA-Pará',
+                        'PB-Paraíba',
+                        'PR-Paraná',
+                        'PE-Pernambuco',
+                        'PI-Piauí',
+                        'RJ-Rio de Janeiro',
+                        'RN-Rio Grande do Norte',
+                        'RS-Rio Grande do Sul',
+                        'RO-Rondônia',
+                        'RR-Roraima',
+                        'SC-Santa Catarina',
+                        'SP-São Paulo',
+                        'SE-Sergipe',
+                        'TO-Tocantins'
+                    ),
+                    key=7
+                )
+
+                dataframe = self.__controler.obter_destinos_mais_procurados_mes_uf(
+                    estado=estado.split('-')[0],
+                    ano=ano,
+                    mes=int(mes.split('-')[0]),
+                    empresa=empresa.split('-')[0],
+                )
+
+                tab_tabela, tab_grafico = st.tabs(['Tabela', 'Grafico'])
+
+                with tab_grafico:
+                    self.__grafico.gerar_grafico_destinos_procurados(
+                        dataframe=dataframe,
+                        chave=9
+                    )
+                with tab_tabela:
+                    trofeus = ["🥇", "🥈", "🥉"]
+                    for i in range(min(3, len(dataframe))):
+                        dataframe.iloc[i,
+                                       1] = f"{trofeus[i]} {dataframe.iloc[i, 1]}"
+                    st.table(dataframe)
+
             with col3:
                 st.text(
                     'Destinos mais procurados no mês-Total de passageiros por estado'
