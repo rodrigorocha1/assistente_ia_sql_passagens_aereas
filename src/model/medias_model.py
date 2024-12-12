@@ -151,3 +151,99 @@ class Medida:
             self.__db.obter_sessao().close()
 
         return dataframe
+
+    def gerar_dataframe_receita_destino(self, ano: int, mes: int, empresa: str) -> pd.DataFrame:
+        sql = """
+        SELECT   
+            da_destino.MUNICIPIO AS DESTINO,
+            ROUND(SUM(ft.TARIFA * FT.ASSENTOS), 2) AS FATURAMENTO
+        FROM read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
+        INNER JOIN main.dim_aeroporto da_destino ON da_destino.oaci = ft.DESTINO
+        WHERE ft.ANO = ?
+        AND ft.MES = ?
+        AND ft.EMPRESA = ?
+        GROUP BY  da_destino.MUNICIPIO
+        ORDER BY 2 DESC
+        LIMIT 10
+        """
+        tipos = {
+            'DESTINO': 'string',
+            'FATURAMENTO': 'float64'
+        }
+        parametros = (ano, mes, empresa)
+
+        try:
+            dataframe = pd.read_sql_query(
+                sql=sql,
+                con=self.__db.obter_conexao(),
+                params=parametros,
+                dtype=tipos
+            )
+
+        finally:
+            self.__db.obter_sessao().close()
+
+        return dataframe
+
+    def gerar_dataframe_receita_origem(self, ano: int, mes: int, empresa: str) -> pd.DataFrame:
+        sql = """
+        SELECT   
+            da_origem.MUNICIPIO AS ORIGEM,
+            ROUND(SUM(ft.TARIFA * FT.ASSENTOS), 2) AS FATURAMENTO
+        FROM read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
+        INNER JOIN main.dim_aeroporto da_origem ON da_origem.oaci = ft.ORIGEM
+        WHERE ft.ANO = ?
+        AND ft.MES = ?
+        AND ft.EMPRESA = ?
+        GROUP BY  da_origem.MUNICIPIO
+        ORDER BY 2 DESC
+        LIMIT 10
+        """
+        tipos = {
+            'ORIGEM': 'string',
+            'FATURAMENTO': 'float64'
+        }
+        parametros = (ano, mes, empresa)
+
+        try:
+            dataframe = pd.read_sql_query(
+                sql=sql,
+                con=self.__db.obter_conexao(),
+                params=parametros,
+                dtype=tipos
+            )
+
+        finally:
+            self.__db.obter_sessao().close()
+
+        return dataframe
+
+    def gerar_dataframe_faturamento_acumulado(self, empresa: str):
+        sql = """
+            WITH faturamento_mensal AS (
+            SELECT 
+                ft.ANO,
+                ft.MES,
+                ROUND(SUM(ft.TARIFA * ft.ASSENTOS), 2) AS total_faturamento
+            FROM 
+                read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
+            INNER JOIN 
+                main.dim_aeroporto da_destino ON da_destino.oaci = ft.DESTINO
+            INNER JOIN 
+                main.dim_aeroporto da_origem ON da_origem.oaci = ft.ORIGEM
+            WHERE  
+                ft.EMPRESA = 'GLO'
+                AND ft.ANO IN (2023, 2024) -- Inclui dados de ambos os anos
+            GROUP BY 
+                ft.ANO, ft.MES
+        )
+        SELECT 
+            ANO,
+            MES,
+            total_faturamento,
+            ROUND(SUM(total_faturamento) OVER (PARTITION BY ANO ORDER BY MES ASC), 2) AS faturamento_acumulado -- Calcula acumulado por ano
+        FROM 
+            faturamento_mensal
+        ORDER BY 
+            ANO ASC, MES ASC
+        """

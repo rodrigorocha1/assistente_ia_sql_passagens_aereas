@@ -16,7 +16,7 @@ class ViewDashboard:
 
     def gerar_layout_receita_origem(self):
         with st.container(border=True):
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2, col3 = st.columns(3)
             with col1:
                 st.markdown(
                     """
@@ -110,39 +110,6 @@ class ViewDashboard:
                         'TAM-TAM LINHAS AÉREAS S.A.'
                     ),
                     key=7
-                )
-                estado = st.selectbox(
-                    'Selecione o estado',
-                    (
-                        'AC-Acre',
-                        'AL-Alagoas',
-                        'AP-Amapá',
-                        'AM-Amazonas',
-                        'BA-Bahia',
-                        'CE-Ceará',
-                        'DF-Distrito Federal',
-                        'ES-Espírito Santo',
-                        'GO-Goiás',
-                        'MA-Maranhão',
-                        'MT-Mato Grosso',
-                        'MS-Mato Grosso do Sul',
-                        'MG-Minas Gerais',
-                        'PA-Pará',
-                        'PB-Paraíba',
-                        'PR-Paraná',
-                        'PE-Pernambuco',
-                        'PI-Piauí',
-                        'RJ-Rio de Janeiro',
-                        'RN-Rio Grande do Norte',
-                        'RS-Rio Grande do Sul',
-                        'RO-Rondônia',
-                        'RR-Roraima',
-                        'SC-Santa Catarina',
-                        'SP-São Paulo',
-                        'SE-Sergipe',
-                        'TO-Tocantins'
-                    ),
-                    key=8
                 )
 
                 dataframe = self.__controler.obter_destinos_mais_procurados_mes_por_uf(
@@ -241,18 +208,108 @@ class ViewDashboard:
                                        1] = f"{trofeus[i]} {dataframe.iloc[i, 1]}"
                     st.table(dataframe)
 
-            with col4:
-                st.text(
-                    'Destinos mais procurados no mês-Variação de procura de destino em relação ao mês anterior',
-                )
+            # with col4:
+            #     st.text(
+            #         'Destinos mais procurados no mês-Variação de procura de destino em relação ao mês anterior',
+            #     )
 
     def gerar_layout_receita(self):
         with st.container(border=True):
             col5, col6, col7 = st.columns(3)
             with col5:
                 st.text('Receita por destino ')
+                ano = st.radio(
+                    'Escolha o ano',
+                    (2023, 2024),
+                    horizontal=True,
+                    key=14
+                )
+                mes = st.selectbox(
+                    'Escolha o mês',
+                    (
+                        '1-Janeiro', '2-Fevereiro', '3-Março', '4-Abril', '5-Maio', '6-Junho', '7-Julho', '8-Agosto', '9-Setembro', '10-Outubro', '11-Novembro', '12-Dezembro'
+                    ),
+                    key=15
+                )
+
+                empresa = st.selectbox(
+                    'Selecione a empresa',
+                    (
+                        'CQB-APUÍ TÁXI AÉREO S/A',
+                        'ABJ-ATA AEROTÁXI ABAETÉ LTDA.',
+                        'AZU-AZUL LINHAS AÉREAS BRASILEIRAS S/A',
+                        'GLO-GOL LINHAS AÉREAS S.A. (EX - VRG LINHAS AÉREAS S.A.)',
+                        'PTB-PASSAREDO TRANSPORTES AÉREOS S.A.',
+                        'TAM-TAM LINHAS AÉREAS S.A.'
+                    ),
+                    key=16
+                )
+
+                dataframe = self.__controler.obter_receita_destino(
+                    ano=ano, mes=int(mes.split('-')[0]), empresa=empresa.split('-')[0])
+
+                self.__grafico.gerar_grafico_destinos_procurados(
+                    dataframe=dataframe,
+                    coluna_x='FATURAMENTO',
+                    coluna_y='DESTINO',
+                    texto='FATURAMENTO',
+                    texto_template=(
+                        "<b>Faturamento:</b> %{x}<br>"
+                        "<b>Destino:</b> %{y}<br>"
+                        "<extra></extra>"
+                    ),
+                    key=17,
+
+                    legenda_x='Faturamento',
+                    legenda_y='Destino'
+                )
             with col6:
                 st.text('Receita por origem')
+                ano = st.radio(
+                    'Escolha o ano',
+                    (2023, 2024),
+                    horizontal=True,
+                    key=18
+                )
+                mes = st.selectbox(
+                    'Escolha o mês',
+                    (
+                        '1-Janeiro', '2-Fevereiro', '3-Março', '4-Abril', '5-Maio', '6-Junho', '7-Julho', '8-Agosto', '9-Setembro', '10-Outubro', '11-Novembro', '12-Dezembro'
+                    ),
+                    key=19
+                )
+
+                empresa = st.selectbox(
+                    'Selecione a empresa',
+                    (
+                        'CQB-APUÍ TÁXI AÉREO S/A',
+                        'ABJ-ATA AEROTÁXI ABAETÉ LTDA.',
+                        'AZU-AZUL LINHAS AÉREAS BRASILEIRAS S/A',
+                        'GLO-GOL LINHAS AÉREAS S.A. (EX - VRG LINHAS AÉREAS S.A.)',
+                        'PTB-PASSAREDO TRANSPORTES AÉREOS S.A.',
+                        'TAM-TAM LINHAS AÉREAS S.A.'
+                    ),
+                    key=20
+                )
+                dataframe = self.__controler.obter_receita_origem(
+                    ano=ano, mes=int(mes.split('-')[0]), empresa=empresa.split('-')[0]
+                )
+
+                self.__grafico.gerar_grafico_destinos_procurados(
+                    dataframe=dataframe,
+                    coluna_x='FATURAMENTO',
+                    coluna_y='ORIGEM',
+                    texto='FATURAMENTO',
+                    texto_template=(
+                        "<b>Faturamento:</b> %{x}<br>"
+                        "<b>Origem:</b> %{y}<br>"
+                        "<extra></extra>"
+                    ),
+                    key=21,
+
+                    legenda_x='Faturamento',
+                    legenda_y='Origem'
+                )
             with col7:
                 st.text('Faturamento Acumulado')
 

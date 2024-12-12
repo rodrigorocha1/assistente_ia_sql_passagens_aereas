@@ -36,3 +36,13 @@ class Controller:
         dataframe = self.__medida.obter_destinos_mais_procurados_por_estado(
             ano=ano, mes=mes, sigla_empresa=sigla_empresa)
         return dataframe
+
+    def obter_receita_destino(self, ano: int, mes: int, empresa: str):
+        dataframe = self.__medida.gerar_dataframe_receita_destino(
+            ano=ano, mes=mes, empresa=empresa)
+        return dataframe
+
+    def obter_receita_origem(self, ano: int, mes: int, empresa: str):
+        dataframe = self.__medida.gerar_dataframe_receita_origem(
+            ano=ano, mes=mes, empresa=empresa)
+        return dataframe

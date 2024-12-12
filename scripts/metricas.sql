@@ -75,7 +75,6 @@ order by 2 desc;
 SELECT 
     ft.MES,
     SUM(ft.ASSENTOS) AS total_passageiros,
-    LAG(SUM(ft.ASSENTOS)) OVER (ORDER BY ft.MES ASC) AS passageiros_mes_anterior,
     ROUND(
         (SUM(ft.ASSENTOS) - LAG(SUM(ft.ASSENTOS)) OVER (ORDER BY ft.MES ASC)) 
         / NULLIF(LAG(SUM(ft.ASSENTOS)) OVER (ORDER BY ft.MES ASC), 0) * 100, 
@@ -89,6 +88,9 @@ AND ft.EMPRESA = 'GLO'
 AND da.MUNICIPIO = 'SÃO PAULO'
 GROUP BY ft.MES
 ORDER BY ft.MES ASC;
+
+select DISTINCT  MUNICIPIO || '-' || UF as MUNICIPIO 
+from main.dim_aeroporto 
 
 
 ===============================================
