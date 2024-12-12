@@ -46,3 +46,8 @@ class Controller:
         dataframe = self.__medida.gerar_dataframe_receita_origem(
             ano=ano, mes=mes, empresa=empresa)
         return dataframe
+
+    def obter_faturamento_acumulado(self, empresa: str):
+        dataframe = self.__medida.gerar_dataframe_faturamento_acumulado(
+            empresa=empresa)
+        return dataframe

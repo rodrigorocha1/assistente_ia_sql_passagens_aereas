@@ -204,7 +204,7 @@ WITH faturamento_mensal AS (
     SELECT 
         ft.ANO,
         ft.MES,
-        ROUND(SUM(ft.TARIFA * ft.ASSENTOS), 2) AS total_passageiros
+        ROUND(SUM(ft.TARIFA * ft.ASSENTOS), 2) AS total_faturamento
     FROM 
         read_csv('/home/rodrigo/Documentos/projetos/assistente_ia_sql_passagens_aereas/banco/fato.csv') ft
     INNER JOIN 
@@ -214,15 +214,14 @@ WITH faturamento_mensal AS (
     WHERE  
         ft.EMPRESA = 'GLO'
         AND ft.ANO IN (2023, 2024) -- Inclui dados de ambos os anos
-        AND da_origem.oaci || '-' || da_destino.oaci = 'SBRJ-SBSP'
     GROUP BY 
         ft.ANO, ft.MES
 )
 SELECT 
     ANO,
     MES,
-    total_passageiros,
-    ROUND(SUM(total_passageiros) OVER (PARTITION BY ANO ORDER BY MES ASC), 2) AS faturamento_acumulado -- Calcula acumulado por ano
+    total_faturamento,
+    ROUND(SUM(total_faturamento) OVER (PARTITION BY ANO ORDER BY MES ASC), 2) AS faturamento_acumulado -- Calcula acumulado por ano
 FROM 
     faturamento_mensal
 ORDER BY 

@@ -312,6 +312,25 @@ class ViewDashboard:
                 )
             with col7:
                 st.text('Faturamento Acumulado')
+                empresa = st.selectbox(
+                    'Selecione a empresa',
+                    (
+                        'CQB-APUÍ TÁXI AÉREO S/A',
+                        'ABJ-ATA AEROTÁXI ABAETÉ LTDA.',
+                        'AZU-AZUL LINHAS AÉREAS BRASILEIRAS S/A',
+                        'GLO-GOL LINHAS AÉREAS S.A. (EX - VRG LINHAS AÉREAS S.A.)',
+                        'PTB-PASSAREDO TRANSPORTES AÉREOS S.A.',
+                        'TAM-TAM LINHAS AÉREAS S.A.'
+                    ),
+                    key=22
+                )
+                dataframe = self.__controler.obter_faturamento_acumulado(
+                    empresa=empresa.split('-')[0]
+                )
+                self.__grafico.gerar_grafico_acumulado(
+                    dataframe=dataframe,
+                    key=23
+                )
 
     def gerar_layout_assentos(self):
         with st.container(border=True):

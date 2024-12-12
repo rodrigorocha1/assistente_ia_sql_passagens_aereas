@@ -232,7 +232,7 @@ class Medida:
             INNER JOIN 
                 main.dim_aeroporto da_origem ON da_origem.oaci = ft.ORIGEM
             WHERE  
-                ft.EMPRESA = 'GLO'
+                ft.EMPRESA = ?
                 AND ft.ANO IN (2023, 2024) -- Inclui dados de ambos os anos
             GROUP BY 
                 ft.ANO, ft.MES
@@ -241,9 +241,30 @@ class Medida:
             ANO,
             MES,
             total_faturamento,
-            ROUND(SUM(total_faturamento) OVER (PARTITION BY ANO ORDER BY MES ASC), 2) AS faturamento_acumulado -- Calcula acumulado por ano
+            ROUND(SUM(total_faturamento) OVER (PARTITION BY ANO ORDER BY MES ASC), 2) AS faturamento_acumulado 
         FROM 
             faturamento_mensal
         ORDER BY 
             ANO ASC, MES ASC
         """
+
+        tipos = {
+            'ANO': 'int32',
+            'MES': 'int32',
+            'total_faturamento': 'float64',
+            'faturamento_acumulado': 'float64',
+        }
+        parametros = (empresa, )
+
+        try:
+            dataframe = pd.read_sql_query(
+                sql=sql,
+                con=self.__db.obter_conexao(),
+                params=parametros,
+                dtype=tipos
+            )
+
+        finally:
+            self.__db.obter_sessao().close()
+
+        return dataframe

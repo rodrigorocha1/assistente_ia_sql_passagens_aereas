@@ -54,7 +54,7 @@ class ViewGrafico:
         )
         st.plotly_chart(fig, key=key)
 
-    def gerar_grafico_acumuladi(self, dataframe: pd.DataFrame, key: int):
+    def gerar_grafico_acumulado(self, dataframe: pd.DataFrame, key: int):
         fig = px.line(
             dataframe,
             x='MES',
